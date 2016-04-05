@@ -67,6 +67,14 @@ class ViewController: UIViewController, CNContactPickerDelegate {
         }
     }
     
+    @IBAction func btnChoose(sender: AnyObject) {
+        
+        let contactPicker = CNContactPickerViewController()
+        contactPicker.delegate = self
+        self.presentViewController(contactPicker, animated: true, completion: nil)
+        
+    }
+    
     func contactPicker(picker: CNContactPickerViewController, didSelectContact contact: CNContact) {
         NSNotificationCenter.defaultCenter().postNotificationName("addNewContact", object: nil, userInfo: ["contactToAdd": contact])
         
@@ -75,10 +83,10 @@ class ViewController: UIViewController, CNContactPickerDelegate {
         
         if contact.phoneNumbers.count > 0 {
             self.txtP1.text = (contact.phoneNumbers[0].value as! CNPhoneNumber).valueForKey("digits") as? String
-            let pLabel = contact.phoneNumbers[0].label
-            let pLabel2 = pLabel.characters.split("<").map(String.init)
-            let pLabel3 = pLabel2[1].characters.split(">").map(String.init)
-            self.lblP1.text = pLabel3[0]
+            let pLabel = contact.phoneNumbers[0].label //_$!<Mobile>!$_
+            let pLabel2 = pLabel.characters.split("<").map(String.init) //[_$!<, Mobile>!$_]
+            let pLabel3 = pLabel2[1].characters.split(">").map(String.init) //[Mobile, >!$_]
+            self.lblP1.text = pLabel3[0] //Mobile
         } else {
             self.txtP1.text = ""
             self.lblP1.text = "Phone 1"
@@ -110,10 +118,10 @@ class ViewController: UIViewController, CNContactPickerDelegate {
         
         if contact.emailAddresses.count > 0 {
             self.txtE1.text = "\(contact.emailAddresses[0].value)"
-            let eLabel = contact.emailAddresses[0].label
-            let eLabel2 = eLabel.characters.split("<").map(String.init)
-            let eLabel3 = eLabel2[1].characters.split(">").map(String.init)
-            self.lblE1.text = eLabel3[0]
+            let eLabel = contact.emailAddresses[0].label //_$!<Work>!$_
+            let eLabel2 = eLabel.characters.split("<").map(String.init) //[_$!<, Work>!$_]
+            let eLabel3 = eLabel2[1].characters.split(">").map(String.init) //[Work, >!$_]
+            self.lblE1.text = eLabel3[0] //Work
         } else {
             self.txtE1.text = ""
             self.lblE1.text = "Email 1"
@@ -141,20 +149,12 @@ class ViewController: UIViewController, CNContactPickerDelegate {
             self.lblE3.text = "Email 3"
         }
         
-        
+        //I thought this would load the relationship of the contact but it seems not to do anything. I figured I would just leave it here anyways because it doesn't appear to cause any issues.
         if contact.contactRelations.count > 0 {
             txtRelationship.text = contact.contactRelations[0].value as? String
         } else {
             txtRelationship.text = ""
         }
-        
-    }
-    
-    @IBAction func btnChoose(sender: AnyObject) {
-        
-        let contactPicker = CNContactPickerViewController()
-        contactPicker.delegate = self
-        self.presentViewController(contactPicker, animated: true, completion: nil)
         
     }
     
